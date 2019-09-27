@@ -1,2 +1,2 @@
 # sherlock-code
-Code examples as discussed in articles on bensherlock.co.uk
+Code examples as discussed in articles on https://bensherlock.co.uk
