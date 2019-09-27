@@ -28,8 +28,8 @@
 //
 // This has been tested using cygwin and x86_64-w64-mingw32-g++.
 //
-// Compile: g++ main.cpp -o test.exe -lm -static
-// Run: ./test.exe
+// Compile: g++ filterfactory-example.cpp -I ../include -o filterfactory-example.exe -lm -static
+// Run: ./filterfactory-example.exe
 //
 //------------------------------------------------------------------------------
 
