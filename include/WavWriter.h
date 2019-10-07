@@ -104,7 +104,7 @@ public:
 
 
     //! Static: Write Header
-    static void writeHeader(FILE *file, uint16_t audioFormat, uint32_t sampleRate, uint16_t bitsPerSample);
+    static void writeHeader(FILE *file, uint16_t audioFormat, uint16_t numChannels, uint32_t sampleRate, uint16_t bitsPerSample);
 
     //! Static: Write data bytes
     static void writeData(FILE *file, uint8_t data[], uint32_t length);
@@ -150,15 +150,15 @@ WavWriter::~WavWriter()
 }
 
 
-void WavWriter::writeHeader(FILE *file, uint16_t audioFormat, uint32_t sampleRate, uint16_t bitsPerSample)
+void WavWriter::writeHeader(FILE *file, uint16_t audioFormat, uint16_t numChannels, uint32_t sampleRate, uint16_t bitsPerSample)
 {
     struct wavutil_header header = createEmptyHeader();
 
     header.audioFormat = audioFormat;//0x0001; // 0x0001=PCM / 0x0003=IEEE float
-    header.numChannels = 1;
+    header.numChannels = numChannels;
     header.sampleRate = sampleRate;
-    header.byteRate = sampleRate * (bitsPerSample/8);
-    header.blockAlign = (bitsPerSample/8);
+    header.byteRate = sampleRate * (bitsPerSample/8) * numChannels;
+    header.blockAlign = (bitsPerSample/8) * numChannels;
     header.bitsPerSample = bitsPerSample;
 
     if( !file ) return;
@@ -235,7 +235,7 @@ void WavWriter::writeWav16(int16_t* data, uint32_t sampleCount, uint32_t sampleR
     }
 
     // Write the header
-    WavWriter::writeHeader(file, WAVE_FORMAT_PCM, sampleRate, 16);
+    WavWriter::writeHeader(file, WAVE_FORMAT_PCM, 1, sampleRate, 16);
 
     // Write the samples in LittleEndian
     WavWriter::writeData(file, (uint8_t*)data, sampleCount * sizeof(int16_t) );
@@ -261,7 +261,7 @@ void WavWriter::writeWav32(int32_t* data, uint32_t sampleCount, uint32_t sampleR
     }
 
     // Write the header
-    WavWriter::writeHeader(file, WAVE_FORMAT_PCM, sampleRate, 32);
+    WavWriter::writeHeader(file, WAVE_FORMAT_PCM, 1, sampleRate, 32);
 
     // Write the samples in LittleEndian
     WavWriter::writeData(file, (uint8_t*)data, sampleCount * sizeof(int32_t) );
@@ -287,7 +287,7 @@ void WavWriter::writeWavFloat32(float* data, uint32_t sampleCount, uint32_t samp
     }
 
     // Write the header
-    WavWriter::writeHeader(file, WAVE_FORMAT_IEEE_FLOAT, sampleRate, 32);
+    WavWriter::writeHeader(file, WAVE_FORMAT_IEEE_FLOAT, 1, sampleRate, 32);
 
     // Write the samples in LittleEndian
     WavWriter::writeData(file, (uint8_t*)data, sampleCount * sizeof(float) );
